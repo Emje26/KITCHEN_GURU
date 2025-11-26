@@ -2,11 +2,6 @@ class Recipe < ApplicationRecord
 
   # Associations
   belongs_to :user
-  has_many :recipe_ingredients, dependent: :destroy
-  has_many :ingredients, through: :recipe_ingredients
-  has_many :steps, -> { order(step_number: :asc) }, dependent: :destroy
-  has_many :meal_plan_entries, dependent: :destroy
-  has_many :meal_plans, through: :meal_plan_entries
 
   # Validations
   validates :title, presence: true, length: { minimum: 3, maximum: 200 }

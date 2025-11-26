@@ -18,13 +18,8 @@ class MealPlansController < ApplicationController
     @user_preference = UserPreference.new(permitted_params)
 
     if @user_preference.valid?
-      # Appel du service API (Mode TEST : On force le plan de secours si quota épuisé)
-
-      # Ligne pour l'appel API réel (commentée pour le mode test) :
-      # generated_data = MenuGeneratorService.new(@user_preference).generate_menu
-
-      # LIGNE DE TEST ACTIVÉE : On simule l'échec de l'API (quota épuisé)
-      generated_data = nil
+      # Appel du service API Gemini pour générer le menu
+      generated_data = MenuGeneratorService.new(@user_preference).generate_menu
 
       # Si l'API retourne un hash valide et rempli
       if generated_data.present? && generated_data['menus'].present?

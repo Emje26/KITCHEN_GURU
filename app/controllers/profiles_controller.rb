@@ -1,6 +1,4 @@
 class ProfilesController < ApplicationController
-  skip_before_action :authenticate_user!, only: [:edit]
-
   before_action :set_profile, only: [:edit, :update]
 
   def edit
@@ -8,7 +6,7 @@ class ProfilesController < ApplicationController
 
   def update
     if @profile.update(profile_params)
-      redirect_to meal_plans_generate_path, notice: "Profile updated successfully!"
+      redirect_to planner_path, notice: "Profil mis à jour avec succès !"
     else
       render :edit, status: :unprocessable_entity
     end
@@ -17,12 +15,15 @@ class ProfilesController < ApplicationController
   private
 
   def set_profile
-    if current_user.nil?
-      redirect_to new_user_session_path, alert: "Please sign in to continue your profile setup."
-      return 
-    end
-
-    @profile = current_user.profile
+    # Créer le profil s'il n'existe pas encore (pour les anciens utilisateurs)
+    @profile = current_user.profile || current_user.create_profile(
+      gender: 'autre',
+      age: 18,
+      activity_level: 'modéré',
+      weekly_budget_max: 100.0,
+      max_prep_time_minutes: 30,
+      allergies: ''
+    )
   end
 
   def profile_params

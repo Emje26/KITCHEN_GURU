@@ -1,8 +1,14 @@
-class UserPreference < ApplicationRecord
-  # La version actuelle de Rails exige que le coder soit spécifié pour la sérialisation d'un Array dans un champ TEXT.
-  require 'json'
-  serialize :allergies, Array, coder: JSON
-  # -----------------------------------------------------------
+# Modèle non-persistant pour les préférences utilisateur lors de la génération de menus
+class UserPreference
+  include ActiveModel::Model
+  include ActiveModel::Attributes
+
+  attribute :age, :integer
+  attribute :gender, :string
+  attribute :activity_level, :string
+  attribute :weekly_budget_max, :decimal
+  attribute :max_prep_time_minutes, :integer
+  attribute :allergies, default: []
 
   # Validation de base pour s'assurer que les données essentielles sont présentes
   validates :age, presence: true, numericality: { greater_than_or_equal_to: 18 }
