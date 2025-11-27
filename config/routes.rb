@@ -11,9 +11,7 @@ Rails.application.routes.draw do
 
   post 'meal_plans/generate', to: 'meal_plans#generate', as: :meal_plans_generate
 
-  resources :recipes, only: [:index, :show]
-  get 'recipes/index'
-  get 'recipes/show'
+  resources :recipes, only: [:index, :show, :destroy]
   get "planner", to: "pages#planner"
   get "up" => "rails/health#show", as: :rails_health_check
 

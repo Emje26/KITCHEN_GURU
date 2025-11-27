@@ -1,8 +1,65 @@
-<h1>Toutes les recettes</h1>
-
-<% @recipes.each do |recipe| %>
-  <div class="recipe-card">
-    <h2><%= link_to recipe.title, recipe_path(recipe) %></h2>
-    <p><%= truncate(recipe.description, length: 100) %></p>
+<div class="recipes-page">
+  <div class="text-center mb-4">
+    <h1 class="fw-bold">Your Recipes</h1>
+    <p class="text-muted">Manage all your saved and generated recipes.</p>
   </div>
-<% end %>
+
+  <div class="d-grid mb-4">
+    <button class="btn btn-primary btn-lg disabled" disabled>
+      ✨ New Recipe (coming soon)
+    </button>
+  </div>
+
+  <div class="recipes-grid">
+    <% @recipes.each do |recipe| %>
+      <div class="recipe-card">
+        <% if recipe.image_url.present? %>
+          <%= image_tag recipe.image_url, class: "recipe-card-image", alt: recipe.title %>
+        <% else %>
+          <div class="recipe-card-image-placeholder">
+            <span>🍽️</span>
+          </div>
+        <% end %>
+
+        <div class="recipe-card-content">
+          <h5 class="recipe-card-title"><%= recipe.title %></h5>
+
+          <% if recipe.calories || recipe.proteins || recipe.fiber || recipe.fats %>
+            <p class="recipe-card-nutrition text-muted small">
+              Nutritional info:
+              <% nutrients = [] %>
+              <% nutrients << "Energy: #{recipe.calories} kcal" if recipe.calories %>
+              <% nutrients << "Protein: #{recipe.proteins}g" if recipe.proteins %>
+              <% nutrients << "Fiber: #{recipe.fiber}g" if recipe.fiber %>
+              <% nutrients << "Fats: #{recipe.fats}g" if recipe.fats %>
+              <%= truncate(nutrients.join(" | "), length: 60) %>
+            </p>
+          <% end %>
+
+          <div class="recipe-card-meta text-muted small mb-3">
+            <% if recipe.prep_time %>
+              <span>⏱️ Prep: <%= recipe.prep_time %> min</span>
+            <% end %>
+            <% if recipe.cook_time %>
+              <span class="ms-2">🔥 Cook: <%= recipe.cook_time %> min</span>
+            <% end %>
+          </div>
+
+          <div class="recipe-card-actions">
+            <%= link_to "View", recipe_path(recipe), class: "btn btn-outline-primary btn-sm" %>
+            <%= button_to "Delete", recipe_path(recipe), method: :delete,
+                data: { turbo_confirm: "Are you sure you want to delete this recipe?" },
+                class: "btn btn-outline-danger btn-sm" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <% if @recipes.empty? %>
+    <div class="text-center py-5">
+      <p class="text-muted fs-5">You don't have any recipes yet.</p>
+      <p class="text-muted">Generate your first meal plan to get started!</p>
+    </div>
+  <% end %>
+</div>
